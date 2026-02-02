@@ -37,6 +37,7 @@ SYSTEM_MESSAGE = (
     "Ton:\n"
     "Kurz, professionell, freundlich."
 )
+
 VOICE = 'alloy'
 LOG_EVENT_TYPES = [
     'error', 'response.content.done', 'rate_limits.updated',
