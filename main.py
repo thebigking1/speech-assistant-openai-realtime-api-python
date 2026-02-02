@@ -62,12 +62,12 @@ async def handle_incoming_call(request: Request):
     # <Say> punctuation to improve text-to-speech flow
     response.say(
         "Bitte warten Sie kurz, wir verbinden Sie jetzt mit unserem KI-Assistenten.",
-        voice="voice="Google.de-DE-Standard-A"
+    voice="Google.de-DE-Standard-A"
     )
     response.pause(length=1)
     response.say(   
         "Okay, Sie können jetzt sprechen.",
-        voice="voice="Google.de-DE-Standard-A"
+voice="Google.de-DE-Standard-A"
     )
     host = request.url.hostname
     connect = Connect()
