@@ -15,8 +15,7 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 PORT = int(os.getenv('PORT', 5050))
 TEMPERATURE = float(os.getenv('TEMPERATURE', 0.8))
-SYSTEM_MESSAGE = (
-    "Rolle: Automatischer Telefonassistent  Kfz-Werkstatt.\n"
+SYSTEM_MESSAGE = ("Rolle: Automatischer Telefonassistent einer Kfz-Werkstatt.\n"
     "Sprache: Deutsch (Hochdeutsch).\n\n"
     "Pflichtregeln:\n"
     "- KEINE Preise nennen.\n"
@@ -31,9 +30,9 @@ SYSTEM_MESSAGE = (
     "- Grund des Anrufs\n"
     "- Dringlichkeit (fahrbereit: ja/nein)\n\n"
     "Wenn der Anrufer nach Preis oder Diagnose fragt:\n"
-    "\"Dafür meldet sich ein Kollege telefonisch bei Ihnen.\"\n\n"
+    "Dafür meldet sich ein Kollege telefonisch bei Ihnen.\n\n"
     "Wenn etwas unklar ist:\n"
-    "\"Wir rufen Sie zurück.\"\n\n"
+    "Wir rufen Sie zurück.\n\n"
     "Ton:\n"
     "Kurz, professionell, freundlich."
 )
