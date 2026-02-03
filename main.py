@@ -82,7 +82,7 @@ async def handle_incoming_call(request: Request):
         "Willkommen bei JC Cars. Bitte warten Sie kurz, wir verbinden Sie jetzt mit unserem KI-Assistenten.",
         voice="Google.de-DE-Standard-A",
     )
-    response.pause(length=1)
+    response.pause(length=0,5)
     response.say(
         "Okay, Sie können jetzt sprechen.",
         voice="Google.de-DE-Standard-A",
@@ -259,7 +259,43 @@ async def initialize_session(openai_ws):
         },
     }
     await openai_ws.send(json.dumps(session_update))
+async def initialize_session(openai_ws):
+    session_update = {
+        "type": "session.update",
+        "session": {
+            "type": "realtime",
+            "model": "gpt-realtime",
+            "output_modalities": ["audio", "text"],
+            "audio": {
+                "input": {
+                    "format": {"type": "audio/pcmu"},
+                    "turn_detection": {"type": "server_vad"}
+                },
+                "output": {
+                    "format": {"type": "audio/pcmu"},
+                    "voice": VOICE
+                }
+            },
+            "instructions": SYSTEM_MESSAGE,
+        }
+    }
 
+    await openai_ws.send(json.dumps(session_update))
+    
+    await openai_ws.send(json.dumps({
+        "type": "conversation.item.create",
+        "item": {
+            "type": "message",
+            "role": "assistant",
+            "content": [
+                {
+                    "type": "output_text",
+                    "text": "Guten Tag, hier ist der automatische Assistent von JC Cars. Wobei kann ich Ihnen helfen?"
+                }
+            ]
+        }
+    }))
+    await openai_ws.send(json.dumps({"type": "response.create"}))
 
 if __name__ == "__main__":
     import uvicorn
