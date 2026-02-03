@@ -84,10 +84,11 @@ voice="Google.de-DE-Standard-A"
 
 @app.websocket("/media-stream")
 async def handle_media_stream(websocket: WebSocket):
-    """Handle WebSocket connections between Twilio and OpenAI."""
     print("Client connected")
     await websocket.accept()
-text_buffer = ""
+
+    text_buffer = ""
+
     async with websockets.connect(
         f"wss://api.openai.com/v1/realtime?model=gpt-realtime&temperature={TEMPERATURE}",
         additional_headers={
@@ -96,7 +97,6 @@ text_buffer = ""
     ) as openai_ws:
         await initialize_session(openai_ws)
 
-        # Connection specific state
         stream_sid = None
         latest_media_timestamp = 0
         last_assistant_item = None
