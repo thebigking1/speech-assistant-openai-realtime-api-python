@@ -36,6 +36,8 @@ SYSTEM_MESSAGE = (
     "Wir rufen Sie zurück.\n\n"
     "Ton:\n"
     "Kurz, professionell, freundlich."
+    "\n\nAm Ende gib NUR ein gültiges JSON-Objekt aus (ohne Text davor/danach) mit:\n"
+"{\"name\":\"\",\"phone\":\"\",\"category\":\"Unfall|Service|Diagnose|Other\",\"urgency\":\"low|medium|high\",\"summary\":\"\",\"language\":\"DE\"}\n"
 )
 VOICE = 'alloy'
 LOG_EVENT_TYPES = [
@@ -229,7 +231,7 @@ async def initialize_session(openai_ws):
         "session": {
             "type": "realtime",
             "model": "gpt-realtime",
-            "output_modalities": ["audio"],
+            "output_modalities": ["audio", "text"],
             "audio": {
                 "input": {
                     "format": {"type": "audio/pcmu"},
