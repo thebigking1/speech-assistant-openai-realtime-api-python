@@ -82,7 +82,7 @@ async def handle_incoming_call(request: Request):
         "Willkommen bei JC Cars. Bitte warten Sie kurz, wir verbinden Sie jetzt mit unserem KI-Assistenten.",
         voice="Google.de-DE-Standard-A",
     )
-    response.pause(length=0,5)
+    response.pause(length=0.5)
     response.say(
         "Okay, Sie können jetzt sprechen.",
         voice="Google.de-DE-Standard-A",
