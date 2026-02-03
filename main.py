@@ -8,7 +8,12 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.websockets import WebSocketDisconnect
 from twilio.twiml.voice_response import VoiceResponse, Connect, Say, Stream
 from dotenv import load_dotenv
-
+from supabase import create_client, Client
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
+supabase: Client | None = None
+if SUPABASE_URL and SUPABASE_SERVICE_KEY:
+    supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 load_dotenv()
 
 # Configuration
@@ -78,7 +83,7 @@ voice="Google.de-DE-Standard-A"
     return HTMLResponse(content=str(response), media_type="application/xml")
 
 @app.websocket("/media-stream")
-async def handle_media_stream(websocket: WebSocket):
+text_buffer = ""async def handle_media_stream(websocket: WebSocket):
     """Handle WebSocket connections between Twilio and OpenAI."""
     print("Client connected")
     await websocket.accept()
