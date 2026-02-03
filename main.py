@@ -50,7 +50,7 @@ SYSTEM_MESSAGE = (
     "\"urgency\":\"low|medium|high\",\"summary\":\"\",\"language\":\"DE\"}"
 )
 
-VOICE = "alloy"
+VOICE = "twilio"
 
 LOG_EVENT_TYPES = [
     "error", "rate_limits.updated",
