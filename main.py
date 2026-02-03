@@ -83,11 +83,11 @@ voice="Google.de-DE-Standard-A"
     return HTMLResponse(content=str(response), media_type="application/xml")
 
 @app.websocket("/media-stream")
-text_buffer = ""async def handle_media_stream(websocket: WebSocket):
+async def handle_media_stream(websocket: WebSocket):
     """Handle WebSocket connections between Twilio and OpenAI."""
     print("Client connected")
     await websocket.accept()
-
+text_buffer = ""
     async with websockets.connect(
         f"wss://api.openai.com/v1/realtime?model=gpt-realtime&temperature={TEMPERATURE}",
         additional_headers={
@@ -125,6 +125,30 @@ text_buffer = ""async def handle_media_stream(websocket: WebSocket):
                     elif data['event'] == 'mark':
                         if mark_queue:
                             mark_queue.pop(0)
+                            if response.get("type") == "response.done":
+    try:
+        start = text_buffer.find("{")
+        end = text_buffer.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            payload_str = text_buffer[start:end+1]
+            payload = json.loads(payload_str)
+
+            if supabase:
+                supabase.table("calls").insert({
+                    "name": payload.get("name"),
+                    "phone": payload.get("phone"),
+                    "category": payload.get("category"),
+                    "urgency": payload.get("urgency"),
+                    "summary": payload.get("summary"),
+                    "language": payload.get("language", "DE"),
+                    "raw_json": payload
+                }).execute()
+
+        text_buffer = ""
+    except Exception as e:
+        print("JSON parse/save failed:", e)
+        text_buffer = ""
+
             except WebSocketDisconnect:
                 print("Client disconnected.")
                 if openai_ws.state.name == 'OPEN':
@@ -136,6 +160,8 @@ text_buffer = ""async def handle_media_stream(websocket: WebSocket):
             try:
                 async for openai_message in openai_ws:
                     response = json.loads(openai_message)
+                    if response.get("type") == "response.output_text.delta" and response.get("delta"):
+    text_buffer += response["delta"]
                     if response['type'] in LOG_EVENT_TYPES:
                         print(f"Received event: {response['type']}", response)
 
